@@ -14,11 +14,11 @@ class NetworkInfo implements NetworkInfoBase {
   @override
   Future<bool> get isConnected async {
     try {
-      final result = await InternetAddress.lookup("google.com");
-      if (result.isNotEmpty && result.first.rawAddress.isNotEmpty) {
-        return true;
-      }
-      return false;
+      HttpClientRequest client =
+          await HttpClient().getUrl(Uri.parse("https://www.google.com"));
+
+      HttpClientResponse res = await client.close();
+      return res.statusCode == 200;
     } on SocketException catch (_) {
       return false;
     } catch (_) {
